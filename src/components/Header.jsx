@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { MdShoppingBasket, MdAdd, MdLogout } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { MdShoppingBasket, MdAdd, MdLogout, MdRemove } from "react-icons/md";
 import { motion } from "framer-motion";
-
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../firebase.config";
-
 import Logo from "../img/logo.png";
 import Avatar from "../img/avatar.png";
-import { Link } from "react-router-dom";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 
@@ -16,7 +14,6 @@ const Header = () => {
   const provider = new GoogleAuthProvider();
 
   const [{ user, cartShow, cartItems }, dispatch] = useStateValue();
-
   const [isMenu, setIsMenu] = useState(false);
 
   const login = async () => {
@@ -118,6 +115,17 @@ const Header = () => {
                       onClick={() => setIsMenu(false)}
                     >
                       New Item <MdAdd />
+                    </p>
+                  </Link>
+                )}
+
+                {user && user.email === "reasashan7@gmail.com" && (
+                  <Link to={"/deleteItems"}>
+                    <p
+                      className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
+                      onClick={() => setIsMenu(false)}
+                    >
+                      Delete Item <MdRemove />
                     </p>
                   </Link>
                 )}

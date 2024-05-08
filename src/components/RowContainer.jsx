@@ -9,6 +9,7 @@ const RowContainer = ({ flag, data, scrollValue }) => {
   const rowContainer = useRef();
 
   const [items, setItems] = useState([]);
+  const [feedbacks, setFeedbacks] = useState({}); 
 
   const [{ cartItems }, dispatch] = useStateValue();
 
@@ -18,6 +19,10 @@ const RowContainer = ({ flag, data, scrollValue }) => {
       cartItems: items,
     });
     localStorage.setItem("cartItems", JSON.stringify(items));
+  };
+
+  const handleFeedback = (itemId, stars) => {
+    setFeedbacks({ ...feedbacks, [itemId]: stars }); 
   };
 
   useEffect(() => {
@@ -72,20 +77,51 @@ const RowContainer = ({ flag, data, scrollValue }) => {
               </p>
               <div className="flex items-center gap-8">
                 <p className="text-lg text-headingColor font-semibold">
-                  <span className="text-sm text-red-500">Rs.</span> {item?.price}
+                  <span className="text-sm text-red-500">Rs.</span>{" "}
+                  {item?.price}
                 </p>
+              </div>
+
+              
+              <div className="flex items-center mt-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <motion.span
+                    key={star}
+                    whileHover={{ scale: 1.2, color: "#FFD700" }} 
+                    onClick={() => handleFeedback(item.title, star)} 
+                    style={{ cursor: "pointer", fontSize: "1.5rem", color: "#D3D3D3" }}
+                  >
+                    {star <= feedbacks[item.title] ? "★" : "☆"}
+                  </motion.span>
+                ))}
               </div>
             </div>
           </div>
         ))
       ) : (
         <div className="w-full flex flex-col items-center justify-center">
-          <img src={NotFound} className="h-340" />
+          <img src={NotFound} className="h-340" alt="Not Found" />
           <p className="text-xl text-headingColor font-semibold my-2">
             Items Not Available
           </p>
         </div>
       )}
+
+      <div className="w-full mt-8 text-center"> 
+        {Object.keys(feedbacks).length > 0 && (
+          <>
+            <h2 className="text-2xl font-semibold mb-4">Customers Feedbacks</h2>
+            {Object.keys(feedbacks).map((itemTitle) => (
+              <div key={itemTitle} className="text-gray-600 mt-2">
+                <p className="text-lg font-semibold">{itemTitle}</p>
+                <div className="flex items-center justify-center">
+                  <p className="text-yellow-400 text-2xl mx-1">{feedbacks[itemTitle]} ★</p>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
     </div>
   );
 };

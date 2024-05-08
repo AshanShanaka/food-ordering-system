@@ -13,7 +13,7 @@ const CartContainer = () => {
   const [flag, setFlag] = useState(1);
   const [tot, setTot] = useState(0);
   const [showBill, setShowBill] = useState(false);
-  const [printBill, setPrintBill] = useState(false); // New state variable to track if bill should be printed
+  const [printBill, setPrintBill] = useState(false); 
 
   const showCart = () => {
     dispatch({
@@ -43,9 +43,11 @@ const CartContainer = () => {
   };
 
   const handlePrint = () => {
-    setPrintBill(true); // Set printBill state to true to indicate bill should be printed
+    setPrintBill(true); 
     window.print();
   };
+
+  const isAdmin = user && user.email === 'reasashan7@gmail.com';
 
   return (
     <motion.div
@@ -69,12 +71,9 @@ const CartContainer = () => {
         </motion.p>
       </div>
 
-      {/* bottom section */}
       {cartItems && cartItems.length > 0 ? (
         <div className="w-full h-full bg-cartBg rounded-t-[2rem] flex flex-col">
-          {/* cart Items section */}
           <div className="w-full h-340 md:h-42 px-6 py-10 flex flex-col gap-3 overflow-y-scroll scrollbar-none">
-            {/* cart Item */}
             {cartItems.map((item) => (
               <CartItem
                 key={item.id}
@@ -85,7 +84,6 @@ const CartContainer = () => {
             ))}
           </div>
 
-          {/* cart total section */}
           <div className="w-full flex-1 bg-cartTotal rounded-t-[2rem] flex flex-col items-center justify-evenly px-8 py-2">
             <div className="w-full flex items-center justify-between">
               <p className="text-gray-400 text-lg">Sub Total</p>
@@ -105,25 +103,13 @@ const CartContainer = () => {
               </p>
             </div>
 
-            {user ? (
-              <>
-                <motion.button
-                  whileTap={{ scale: 0.8 }}
-                  type="button"
-                  className="w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg"
-                  onClick={handleCheckout}
-                >
-                  Check Out
-                </motion.button>
-              </>
-            ) : (
-              <motion.button
-                whileTap={{ scale: 0.8 }}
-                type="button"
-                className="w-full p-2 rounded-full bg-gradient-to-tr from-orange-400 to-orange-600 text-gray-50 text-lg my-2 hover:shadow-lg"
+            {isAdmin && (
+              <button 
+                onClick={handlePrint}
+                className="w-full p-2 rounded-full bg-gradient-to-tr from-blue-500 to-blue-700 text-white text-lg my-4 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               >
-                Login to check out
-              </motion.button>
+                Print Bill
+              </button>
             )}
           </div>
         </div>
@@ -136,12 +122,9 @@ const CartContainer = () => {
         </div>
       )}
 
-      {/* Display bill */}
       {showBill && (
         <div className="bill-wrapper">
-          {/* Only render the bill if printBill is true */}
           {printBill && <Bill items={cartItems} subTotal={tot} delivery={300} total={tot + 300} />}
-          <button onClick={handlePrint}>Print Bill</button>
         </div>
       )}
     </motion.div>
